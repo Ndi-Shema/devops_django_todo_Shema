@@ -1,0 +1,43 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.db
+*.sqlite3
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.db
+*.sqlite3
+
+# Django migrations
+*/migrations/*
+
+# Virtual environments
+venv/
+env/
+.venv/
+.ENV/
+
+# Docker
+*.docker
+docker-compose.override.yml
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# IDEs (if using PyCharm, IntelliJ, etc.)
+.idea/
+
+# System Files
+Thumbs.db
+ehthumbs.db
