@@ -37,4 +37,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Docker images
-        run: docker push shema/todo-api
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/todo-api
