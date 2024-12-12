@@ -2,33 +2,48 @@
   hosts: target_server
   become: yes
   tasks:
+    - name: Ensure destination directory exists
+      ansible.builtin.file:
+        path: /opt/todo_app
+        state: directory
+        owner: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Install Docker dependencies
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add Docker GPG key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
     - name: Install Docker
-      ansible.builtin.raw: |
+      ansible.builtin.shell: |
         curl -fsSL https://get.docker.com | sh
       args:
         creates: /usr/bin/docker
 
     - name: Install Docker Compose
-      ansible.builtin.raw: |
-        curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
-      args:
-        creates: /usr/local/bin/docker-compose
+      ansible.builtin.get_url:
+        url: "https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
 
-    - name: Log in to Docker Hub
-      ansible.builtin.shell: |
-        echo "{{ docker_hub_password }}" | docker login -u "{{ docker_hub_username }}" --password-stdin
-      vars:
-        docker_hub_username: "{{ lookup('env', 'DOCKER_HUB_USERNAME') }}"
-        docker_hub_password: "{{ lookup('env', 'DOCKER_HUB_PASSWORD') }}"
+    - name: Copy project files
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/"
+        dest: /opt/todo_app/
+        owner: "{{ ansible_user }}"
+        mode: '0755'
 
-    - name: Pull the latest Docker images
-      ansible.builtin.shell: |
-        cd /path/to/your/app
-        docker-compose pull
-
-    - name: Start the application using Docker Compose
-      ansible.builtin.shell: |
-        cd /mnt/c/Users/Lenovo/devops_django_todo_Shema/ansible
-        docker-compose up -d
+    - name: Start application with Docker Compose
+      ansible.builtin.shell:
+        cmd: docker-compose up -d
+        chdir: /opt/todo_app
+      become: yes
