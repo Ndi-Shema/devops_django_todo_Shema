@@ -1,32 +1,36 @@
-version: '3.9-slim'
+version: '3.9'
 
 services:
   web:
     build: .
     command: gunicorn todo_api.wsgi:application --bind 0.0.0.0:8000
     environment:
-      DB_NAME: shema_db
-      DB_USER: shema
-      DB_PASSWORD: secure_password
-      DB_HOST: db
-      DB_PORT: 2409
+      - DB_NAME=shema_db
+      - DB_USER=shema
+      - DB_PASSWORD=shema
+      - DB_HOST=db
+      - DB_PORT=5432
     ports:
       - "2410:8000"
     volumes:
       - .:/app
     depends_on:
       - db
+    networks:
+      - todo_network
 
   db:
     image: postgres:13
     environment:
-      POSTGRES_DB: shema_db
-      POSTGRES_USER: shema
-      POSTGRES_PASSWORD: shema
+      - POSTGRES_DB=shema_db
+      - POSTGRES_USER=shema
+      - POSTGRES_PASSWORD=shema
     ports:
-      - "2411:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todo_network
 
   nginx:
     image: nginx:latest
@@ -36,6 +40,11 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - web
+    networks:
+      - todo_network
 
 volumes:
   postgres_data:
+
+networks:
+  todo_network:

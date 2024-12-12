@@ -30,5 +30,5 @@
 
     - name: Start the application using Docker Compose
       ansible.builtin.shell: |
-        cd /path/to/your/app
+        cd /mnt/c/Users/Lenovo/devops_django_todo_Shema/ansible
         docker-compose up -d
