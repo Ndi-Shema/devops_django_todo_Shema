@@ -94,10 +94,10 @@ WSGI_APPLICATION = 'todo_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shema_db',
+        'NAME': 'shema',
         'USER': 'shema',
         'PASSWORD': 'shema',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '5432',  # Change this to 5432
     }
 }

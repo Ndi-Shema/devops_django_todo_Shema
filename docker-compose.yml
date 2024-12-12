@@ -5,10 +5,10 @@ services:
     build: .
     command: gunicorn todo_api.wsgi:application --bind 0.0.0.0:8000
     environment:
-      - DB_NAME=shema_db
+      - DB_NAME=shema
       - DB_USER=shema
       - DB_PASSWORD=shema
-      - DB_HOST=db
+      - DB_HOST=localhost
       - DB_PORT=5432
     ports:
       - "2410:8000"
@@ -22,7 +22,7 @@ services:
   db:
     image: postgres:13
     environment:
-      - POSTGRES_DB=shema_db
+      - POSTGRES_DB=shema
       - POSTGRES_USER=shema
       - POSTGRES_PASSWORD=shema
     ports:
