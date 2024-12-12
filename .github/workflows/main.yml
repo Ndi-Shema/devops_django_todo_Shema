@@ -30,4 +30,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops-CI-CD:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops-shema:latest
